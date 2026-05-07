@@ -7,8 +7,9 @@ import {
   printResult
 } from "./ui.js";
 
-const input = "Hello world";
-const cycles = 20;
+import { getConfig } from "./config.js";
+
+const { input, cycles } = getConfig();
 
 printBanner();
 
