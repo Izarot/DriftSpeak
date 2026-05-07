@@ -1,0 +1,1 @@
+console.log("DriftSpeak initialized.");
