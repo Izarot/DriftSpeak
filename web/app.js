@@ -1,27 +1,16 @@
+import {
+  generateDrift
+} from "./scripts/drift.js";
+
+import {
+  renderOutput
+} from "./scripts/ui.js";
+
 const button =
   document.getElementById("driftButton");
 
 const output =
   document.getElementById("output");
-
-function fakeDrift(text, cycles) {
-  let current = text;
-
-  let history = "";
-
-  for (let i = 1; i <= cycles; i++) {
-
-    current =
-      `[DRIFT ${i}] ` + current;
-
-    history +=
-`${i}. ${current}
-
-`;
-  }
-
-  return history;
-}
 
 button.addEventListener("click", () => {
 
@@ -34,12 +23,18 @@ button.addEventListener("click", () => {
     );
 
   if (!text.trim()) {
-    output.textContent =
-      "Enter some text first.";
+
+    renderOutput(
+      output,
+      "Enter some text first."
+    );
+
     return;
   }
 
-  output.textContent =
-    fakeDrift(text, cycles);
+  const history =
+    generateDrift(text, cycles);
+
+  renderOutput(output, history);
 
 });
