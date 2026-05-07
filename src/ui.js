@@ -18,7 +18,25 @@ export function printChain(chain) {
 }
 
 export function printResult(result) {
-  console.log("\nMutation Result:\n");
+  console.log("\nMutation History:\n");
 
-  console.log(result);
+  result.history.forEach((step) => {
+    console.log(
+      `[${step.cycle}] ${step.from} → ${step.to}`
+    );
+
+    console.log(
+      `${step.input}`
+    );
+
+    console.log("↓");
+
+    console.log(
+      `${step.output}\n`
+    );
+  });
+
+  console.log("==================================");
+  console.log("FINAL OUTPUT:\n");
+  console.log(result.final);
 }
