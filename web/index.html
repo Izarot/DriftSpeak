@@ -22,34 +22,44 @@
 
 <body>
 
+  <div class="backgroundGlow"></div>
+
   <div class="container">
 
     <h1>DriftSpeak</h1>
 
-    <input
-      id="inputText"
-      type="text"
-      placeholder="Enter word..."
-    >
+    <p class="subtitle">
+      Semantic Mutation Engine
+    </p>
 
-    <input
-      id="cycleCount"
-      type="number"
-      placeholder="Cycles"
-      value="10"
-    >
+    <div class="panel">
 
-    <button id="runButton">
-      DriftSpeak
-    </button>
+      <input
+        id="inputText"
+        type="text"
+        placeholder="Enter text..."
+      >
+
+      <input
+        id="cycleCount"
+        type="number"
+        value="10"
+        min="1"
+      >
+
+      <button id="runButton">
+        INITIATE DRIFT
+      </button>
+
+    </div>
 
     <div id="output"></div>
 
   </div>
 
   <script
-    type="module"
     src="app.js"
+    type="module"
   ></script>
 
 </body>
