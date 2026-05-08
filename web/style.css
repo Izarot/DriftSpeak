@@ -1,51 +1,239 @@
+* {
+
+  margin: 0;
+
+  padding: 0;
+
+  box-sizing: border-box;
+}
+
 body {
 
-  background: #050510;
+  background:
+    radial-gradient(
+      circle at top,
+      #111133,
+      #050510 60%
+    );
 
-  color: cyan;
+  color: white;
 
-  font-family: monospace;
+  font-family:
+    Arial,
+    sans-serif;
 
-  padding: 40px;
+  min-height: 100vh;
+
+  overflow-x: hidden;
+}
+
+.backgroundGlow {
+
+  position: fixed;
+
+  width: 700px;
+
+  height: 700px;
+
+  background:
+    cyan;
+
+  filter: blur(180px);
+
+  opacity: 0.12;
+
+  top: -200px;
+
+  left: 50%;
+
+  transform:
+    translateX(-50%);
+
+  pointer-events: none;
 }
 
 .container {
 
-  max-width: 700px;
+  max-width: 900px;
 
   margin: auto;
+
+  padding: 60px 20px;
 }
 
-input,
+h1 {
+
+  font-size: 4rem;
+
+  text-align: center;
+
+  color: cyan;
+
+  letter-spacing: 6px;
+
+  text-shadow:
+    0 0 30px cyan;
+}
+
+.subtitle {
+
+  text-align: center;
+
+  color: #aaaaee;
+
+  margin-top: 10px;
+
+  margin-bottom: 40px;
+
+  font-size: 1.1rem;
+
+  letter-spacing: 2px;
+}
+
+.panel {
+
+  background:
+    rgba(255,255,255,0.05);
+
+  border:
+    1px solid rgba(255,255,255,0.1);
+
+  backdrop-filter:
+    blur(12px);
+
+  padding: 25px;
+
+  border-radius: 24px;
+
+  box-shadow:
+    0 0 40px rgba(0,255,255,0.08);
+}
+
+input {
+
+  width: 100%;
+
+  padding: 16px;
+
+  margin-bottom: 15px;
+
+  background:
+    rgba(0,0,0,0.4);
+
+  border:
+    1px solid rgba(255,255,255,0.08);
+
+  border-radius: 14px;
+
+  color: white;
+
+  font-size: 1rem;
+}
+
+input:focus {
+
+  outline: none;
+
+  border-color: cyan;
+
+  box-shadow:
+    0 0 20px rgba(0,255,255,0.3);
+}
+
 button {
 
   width: 100%;
 
-  margin-top: 10px;
+  padding: 16px;
 
-  padding: 12px;
+  border: none;
 
-  background: black;
+  border-radius: 14px;
 
-  color: cyan;
+  background:
+    linear-gradient(
+      90deg,
+      cyan,
+      #7a5cff
+    );
 
-  border: 1px solid cyan;
+  color: black;
+
+  font-weight: bold;
+
+  letter-spacing: 2px;
+
+  cursor: pointer;
+
+  transition: 0.3s;
 }
 
 button:hover {
 
-  cursor: pointer;
+  transform:
+    scale(1.02);
 
-  background: cyan;
-
-  color: black;
+  box-shadow:
+    0 0 25px cyan;
 }
 
 #output {
 
-  margin-top: 30px;
+  margin-top: 40px;
+}
 
-  white-space: pre-wrap;
+.driftCard {
 
-  line-height: 1.6;
+  background:
+    rgba(255,255,255,0.04);
+
+  border:
+    1px solid rgba(255,255,255,0.08);
+
+  border-radius: 20px;
+
+  padding: 20px;
+
+  margin-bottom: 20px;
+
+  backdrop-filter:
+    blur(10px);
+
+  animation:
+    fadeIn 0.5s ease;
+}
+
+.lang {
+
+  color: cyan;
+
+  font-size: 0.9rem;
+
+  margin-bottom: 10px;
+}
+
+.text {
+
+  font-size: 1.3rem;
+
+  word-break: break-word;
+}
+
+@keyframes fadeIn {
+
+  from {
+
+    opacity: 0;
+
+    transform:
+      translateY(20px);
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform:
+      translateY(0);
+  }
 }
