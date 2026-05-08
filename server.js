@@ -15,6 +15,14 @@ app.use(
   express.static("web")
 );
 
+app.get("/", (req, res) => {
+
+  res.sendFile(
+    process.cwd() +
+    "/web/index.html"
+  );
+});
+
 app.post(
   "/drift",
   async (req, res) => {
