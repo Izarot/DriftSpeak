@@ -1,40 +1,52 @@
-import {
-  generateDrift
-} from "./scripts/drift.js";
+import { driftText }
+from "../src/core/drift.js";
 
-import {
-  renderOutput
-} from "./scripts/ui.js";
+const input =
+  document.getElementById(
+    "inputText"
+  );
+
+const cycles =
+  document.getElementById(
+    "cycleCount"
+  );
 
 const button =
-  document.getElementById("driftButton");
+  document.getElementById(
+    "runButton"
+  );
 
 const output =
-  document.getElementById("output");
+  document.getElementById(
+    "output"
+  );
 
-button.addEventListener("click", () => {
+button.onclick =
+async () => {
 
-  const text =
-    document.getElementById("inputText").value;
+  output.innerHTML =
+    "DRIFTING...";
 
-  const cycles =
-    parseInt(
-      document.getElementById("cycles").value
+  const result =
+    await driftText(
+      input.value,
+      Number(cycles.value)
     );
 
-  if (!text.trim()) {
+  output.innerHTML =
+    result.map(step =>
 
-    renderOutput(
-      output,
-      "Enter some text first."
-    );
+      `
+Cycle ${step.cycle}
 
-    return;
-  }
+${step.fakeFrom}
+→
+${step.to}
 
-  const history =
-    generateDrift(text, cycles);
+${step.text}
 
-  renderOutput(output, history);
+------------------
+      `
 
-});
+    ).join("");
+};

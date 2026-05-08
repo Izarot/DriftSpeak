@@ -1,15 +1,12 @@
 export const languages = [
   "en",
+  "ja",
   "fr",
   "de",
-  "ja",
   "es",
   "ru",
-  "ar",
-  "it",
   "ko",
-  "zh-CN",
-  "hi",
+  "ar",
   "tr",
   "fi"
 ];

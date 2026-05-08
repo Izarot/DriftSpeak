@@ -1,42 +1,57 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>DriftSpeak</title>
 
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-  <h1>🌍 DriftSpeak</h1>
-  <p>
-    Powered by the Izaron Drift Engine
-  </p>
-
-  <textarea
-    id="inputText"
-    placeholder="Enter text..."
-  ></textarea>
-
-  <br><br>
-
-  <input
-    type="number"
-    id="cycles"
-    value="20"
-    min="1"
-    max="500"
+  <link
+    rel="stylesheet"
+    href="style.css"
   >
 
-  <button id="driftButton">
-    DRIFT
-  </button>
+</head>
 
-  <pre id="output"></pre>
+<body>
 
-  <script type="module" src="app.js"></script>
+  <div class="container">
+
+    <h1>DriftSpeak</h1>
+
+    <input
+      id="inputText"
+      type="text"
+      placeholder="Enter word..."
+    >
+
+    <input
+      id="cycleCount"
+      type="number"
+      placeholder="Cycles"
+      value="10"
+    >
+
+    <button id="runButton">
+      DriftSpeak
+    </button>
+
+    <div id="output"></div>
+
+  </div>
+
+  <script
+    type="module"
+    src="app.js"
+  ></script>
 
 </body>
+
 </html>

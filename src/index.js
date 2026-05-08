@@ -1,25 +1,57 @@
-import { generateDriftChain } from "./drift.js";
-import { mutateText } from "./mutate.js";
+import readline from "readline";
 
-import {
-  printBanner,
-  printChain,
-  printResult
-} from "./ui.js";
+import { driftText }
+from "./core/drift.js";
 
-import { getConfig } from "./config.js";
+const rl =
+  readline.createInterface({
 
-const { input, cycles } = getConfig();
+    input: process.stdin,
 
-printBanner();
+    output: process.stdout
+  });
 
-console.log(`Input: ${input}`);
-console.log(`Cycles: ${cycles}\n`);
+rl.question(
+  "Enter text: ",
 
-const chain = generateDriftChain(cycles);
+  (text) => {
 
-printChain(chain);
+    rl.question(
+      "Enter cycles: ",
 
-const result = mutateText(input, chain);
+      async (cycles) => {
 
-printResult(result);
+        const result =
+          await driftText(
+            text,
+            Number(cycles)
+          );
+
+        console.log("\n");
+
+        result.forEach(
+          step => {
+
+            console.log(
+              `Cycle ${step.cycle}`
+            );
+
+            console.log(
+              `${step.fakeFrom} → ${step.to}`
+            );
+
+            console.log(
+              step.text
+            );
+
+            console.log(
+              "----------------"
+            );
+          }
+        );
+
+        rl.close();
+      }
+    );
+  }
+);
