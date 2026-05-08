@@ -1,6 +1,3 @@
-import { driftText }
-from "../src/core/drift.js";
-
 const input =
   document.getElementById(
     "inputText"
@@ -25,28 +22,64 @@ button.onclick =
 async () => {
 
   output.innerHTML =
-    "DRIFTING...";
+    "<p>DRIFTING...</p>";
 
-  const result =
-    await driftText(
-      input.value,
-      Number(cycles.value)
+  const response =
+    await fetch(
+      "/drift",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
+
+        body: JSON.stringify({
+          text: input.value,
+          cycles:
+            Number(
+              cycles.value
+            )
+        })
+      }
     );
 
-  output.innerHTML =
-    result.map(step =>
+  const result =
+    await response.json();
 
-      `
-Cycle ${step.cycle}
+  output.innerHTML = "";
 
-${step.fakeFrom}
-→
-${step.to}
+  result.forEach(
+    step => {
 
-${step.text}
+      const card =
+        document.createElement(
+          "div"
+        );
 
-------------------
-      `
+      card.className =
+        "driftCard";
 
-    ).join("");
+      card.innerHTML =
+
+        `
+        <div class="lang">
+          Cycle ${step.cycle}
+          •
+          ${step.fakeFrom}
+          →
+          ${step.to}
+        </div>
+
+        <div class="text">
+          ${step.text}
+        </div>
+        `;
+
+      output.appendChild(
+        card
+      );
+    }
+  );
 };
