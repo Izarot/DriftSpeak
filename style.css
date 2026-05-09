@@ -237,3 +237,104 @@ button:hover {
       translateY(0);
   }
 }
+
+.hidden {
+  display: none;
+}
+
+#resultArea {
+  margin-top: 40px;
+}
+
+.finalCard {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 28px;
+  padding: 40px;
+  backdrop-filter: blur(18px);
+  box-shadow: 0 0 40px rgba(0,255,255,0.1);
+  animation: fadeUp 0.8s ease;
+}
+
+.originalText,
+.finalText {
+  font-size: 2rem;
+  text-align: center;
+  word-break: break-word;
+}
+
+.arrow {
+  text-align: center;
+  font-size: 2rem;
+  margin: 25px 0;
+  color: cyan;
+  animation: pulse 2s infinite;
+}
+
+.finalText {
+  color: cyan;
+  text-shadow: 0 0 20px cyan;
+}
+
+.historyToggle {
+  margin-top: 25px;
+  text-align: center;
+  color: #88ccff;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 0.95rem;
+}
+
+.historyToggle:hover {
+  color: cyan;
+  text-shadow: 0 0 10px cyan;
+}
+
+.historyPanel {
+  margin-top: 30px;
+  animation: fadeUp 0.5s ease;
+}
+
+.historyCard {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 15px;
+}
+
+.historyLang {
+  color: cyan;
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+}
+
+.historyText {
+  font-size: 1.1rem;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.5;
+  }
+}
