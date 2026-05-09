@@ -28,41 +28,84 @@ export default async function handler(
     "nl"
   ];
 
+  const weirdFragments = [
+    "!!!",
+    "...",
+    "???",
+    "..!",
+    "!?!",
+    "??!",
+  ];
+
   const history = [];
 
   let currentText = text;
 
-  let currentLanguage = "en";
+  function randomItem(arr) {
 
-  function randomLanguage() {
-
-    return languages[
+    return arr[
       Math.floor(
         Math.random() *
-        languages.length
+        arr.length
       )
     ];
   }
 
+  function mutateText(input) {
+
+    let text = input;
+
+    // Random typo mutation
+
+    if (Math.random() < 0.4) {
+
+      text =
+        text.replace(
+          /a/g,
+          "ah"
+        );
+    }
+
+    // Random punctuation
+
+    if (Math.random() < 0.5) {
+
+      text +=
+        " " +
+        randomItem(
+          weirdFragments
+        );
+    }
+
+    // Random spacing corruption
+
+    if (Math.random() < 0.3) {
+
+      text =
+        text.replace(
+          / /g,
+          "  "
+        );
+    }
+
+    return text;
+  }
+
   async function doTranslate(
     input,
-    from,
+    fakeFrom,
     to
   ) {
 
-    const cacheKey =
-      `${input}_${from}_${to}`;
+    const mutated =
+      mutateText(input);
 
-    // MEMORY CACHE
+    const cacheKey =
+      `${mutated}_${fakeFrom}_${to}`;
 
     if (
       translationCache[cacheKey]
     ) {
-
-      console.log(
-        "CACHE HIT:",
-        cacheKey
-      );
 
       return translationCache[
         cacheKey
@@ -70,7 +113,7 @@ export default async function handler(
     }
 
     console.log(
-      `API: ${from} → ${to}`
+      `FAKE ${fakeFrom} → ${to}`
     );
 
     const controller =
@@ -86,7 +129,7 @@ export default async function handler(
     try {
 
       const url =
-        `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${from}&tl=${to}&dt=t&q=${encodeURIComponent(input)}`;
+        `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${fakeFrom}&tl=${to}&dt=t&q=${encodeURIComponent(mutated)}`;
 
       const response =
         await fetch(
@@ -102,69 +145,54 @@ export default async function handler(
       const data =
         await response.json();
 
-      const translatedText =
+      const translated =
         data[0]
           .map(
             item => item[0]
           )
           .join("");
 
-      // SAVE TO MEMORY
-
       translationCache[
         cacheKey
-      ] = translatedText;
+      ] = translated;
 
-      return translatedText;
+      return translated;
 
     } catch (error) {
 
-      console.error(
-        "Translation failed:",
-        error
-      );
+      console.error(error);
 
-      return input;
+      return mutated;
     }
   }
 
   try {
 
     // FIRST STEP
-    // en → random
+    // fake en → random
 
-    let nextLanguage =
-      randomLanguage();
-
-    while (
-      nextLanguage === currentLanguage
-    ) {
-
-      nextLanguage =
-        randomLanguage();
-    }
+    let currentLanguage =
+      randomItem(
+        languages
+      );
 
     currentText =
       await doTranslate(
         currentText,
-        currentLanguage,
-        nextLanguage
+        "en",
+        currentLanguage
       );
 
     history.push({
       cycle: 1,
-      fakeFrom:
-        currentLanguage,
+      fakeFrom: "en",
       to:
-        nextLanguage,
+        currentLanguage,
       text:
         currentText
     });
 
-    currentLanguage =
-      nextLanguage;
-
-    // RANDOM CHAOS CYCLES
+    // CHAOS DRIFT
 
     for (
       let i = 0;
@@ -172,61 +200,62 @@ export default async function handler(
       i++
     ) {
 
-      let targetLanguage =
-        randomLanguage();
+      let fakeSource =
+        randomItem(
+          languages
+        );
+
+      let target =
+        randomItem(
+          languages
+        );
 
       while (
-        targetLanguage === currentLanguage
+        target === fakeSource
       ) {
 
-        targetLanguage =
-          randomLanguage();
+        target =
+          randomItem(
+            languages
+          );
       }
 
       currentText =
         await doTranslate(
           currentText,
-          currentLanguage,
-          targetLanguage
+          fakeSource,
+          target
         );
 
       history.push({
         cycle: i + 2,
-
         fakeFrom:
-          currentLanguage,
-
+          fakeSource,
         to:
-          targetLanguage,
-
+          target,
         text:
           currentText
       });
-
-      currentLanguage =
-        targetLanguage;
     }
 
-    // FINAL STEP
-    // random → en
+    // FINAL RECONSTRUCTION
 
     currentText =
       await doTranslate(
         currentText,
-        currentLanguage,
+        randomItem(
+          languages
+        ),
         "en"
       );
 
     history.push({
       cycle:
         cycles + 2,
-
       fakeFrom:
-        currentLanguage,
-
+        "???",
       to:
         "en",
-
       text:
         currentText
     });
@@ -241,7 +270,7 @@ export default async function handler(
 
     res.status(500).json({
       error:
-        "Semantic reactor meltdown ☠️"
+        "Drift reactor collapse ☠️"
     });
   }
 }
