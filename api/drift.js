@@ -28,12 +28,6 @@ export default async function handler(
     "nl"
   ];
 
-  const weirdFragments = [
-    "like",
-    "shitty",
-    "void",
-  ];
-
   const history = [];
 
   let currentText = text;
@@ -48,13 +42,15 @@ export default async function handler(
     ];
   }
 
+  // VERY LIGHT NATURAL MUTATION
+
   function mutateText(input) {
 
     let text = input;
 
-    // Random typo mutation
+    // ~1% typo chance
 
-    if (Math.random() < 0.4) {
+    if (Math.random() < 0.01) {
 
       text =
         text.replace(
@@ -63,26 +59,11 @@ export default async function handler(
         );
     }
 
-    // Random punctuation
+    // tiny punctuation instability
 
-    if (Math.random() < 0.5) {
+    if (Math.random() < 0.03) {
 
-      text +=
-        " " +
-        randomItem(
-          weirdFragments
-        );
-    }
-
-    // Random spacing corruption
-
-    if (Math.random() < 0.3) {
-
-      text =
-        text.replace(
-          / /g,
-          "  "
-        );
+      text += ".";
     }
 
     return text;
@@ -99,6 +80,8 @@ export default async function handler(
 
     const cacheKey =
       `${mutated}_${fakeFrom}_${to}`;
+
+    // CACHE MEMORY
 
     if (
       translationCache[cacheKey]
@@ -166,7 +149,7 @@ export default async function handler(
   try {
 
     // FIRST STEP
-    // fake en → random
+    // en → random
 
     let currentLanguage =
       randomItem(
@@ -226,10 +209,13 @@ export default async function handler(
 
       history.push({
         cycle: i + 2,
+
         fakeFrom:
           fakeSource,
+
         to:
           target,
+
         text:
           currentText
       });
