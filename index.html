@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>DriftSpeak</title>
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
+</head>
+
+<body>
+
+  <div class="backgroundGlow"></div>
+
+  <div class="container">
+
+    <h1>DriftSpeak</h1>
+
+    <p class="subtitle">
+      Semantic Mutation Engine
+    </p>
+
+    <div class="panel">
+
+      <input
+        id="inputText"
+        type="text"
+        placeholder="Enter text..."
+      >
+
+      <input
+        id="cycleCount"
+        type="number"
+        value="10"
+        min="1"
+      >
+
+      <button id="runButton">
+        INITIATE DRIFT
+      </button>
+
+    </div>
+
+    <div id="output"></div>
+
+  </div>
+
+  <script src="app.js"></script>
+
+</body>
+
+</html>
