@@ -49,12 +49,15 @@ button.onclick = async () => {
   );
 
   const result =
-    await response.json();
+  await response.json();
 
-  latestHistory = result;
+latestHistory =
+  result.history;
 
-  const finalStep =
-    result[result.length - 1];
+const finalStep =
+  result.history[
+    result.history.length - 1
+  ];
 
   resultArea.innerHTML = `
     <div class="finalCard">
