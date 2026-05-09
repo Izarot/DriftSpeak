@@ -14,19 +14,58 @@ export default async function handler(
   } = req.body;
 
   const languages = [
-    "fr",
-    "de",
-    "es",
-    "ja",
-    "ko",
-    "ru",
-    "ar",
-    "fi",
-    "tr",
-    "it",
-    "pl",
-    "nl"
-  ];
+
+  "fr", // French
+  "de", // German
+  "es", // Spanish
+  "ja", // Japanese
+  "ko", // Korean
+  "ru", // Russian
+  "ar", // Arabic
+  "fi", // Finnish
+  "tr", // Turkish
+  "it", // Italian
+  "pl", // Polish
+  "nl", // Dutch
+  "zh-CN", // Chinese Simplified
+  "zh-TW", // Chinese Traditional
+  "hi", // Hindi
+  "bn", // Bengali
+  "ta", // Tamil
+  "te", // Telugu
+  "el", // Greek
+  "he", // Hebrew
+  "th", // Thai
+  "vi", // Vietnamese
+  "id", // Indonesian
+  "ms", // Malay
+  "uk", // Ukrainian
+  "ro", // Romanian
+  "hu", // Hungarian
+  "cs", // Czech
+  "da", // Danish
+  "no", // Norwegian
+  "sv", // Swedish
+  "sk", // Slovak
+  "sr", // Serbian
+  "hr", // Croatian
+  "bg", // Bulgarian
+  "lt", // Lithuanian
+  "lv", // Latvian
+  "et", // Estonian
+  "sl", // Slovenian
+  "sw", // Swahili
+  "fa", // Persian
+  "ur", // Urdu
+  "ca", // Catalan
+  "eu", // Basque
+  "gl", // Galician
+  "is", // Icelandic
+  "mt", // Maltese
+  "sq", // Albanian
+  "mk", // Macedonian
+
+ ];
 
   const history = [];
 
