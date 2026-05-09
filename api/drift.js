@@ -1,5 +1,4 @@
-import { driftText }
-from "../src/core/drift.js";
+const translationCache = {};
 
 export default async function handler(
   req,
@@ -48,34 +47,82 @@ export default async function handler(
     to
   ) {
 
-    console.log(
-      `${from} → ${to}`
-    );
+    const cacheKey =
+      `${input}_${from}_${to}`;
 
-    const response =
-      await fetch(
-        "https://translate.argosopentech.com/translate",
-        {
-          method: "POST",
+    // MEMORY CACHE
 
-          headers: {
-            "Content-Type":
-              "application/json"
-          },
+    if (
+      translationCache[cacheKey]
+    ) {
 
-          body: JSON.stringify({
-            q: input,
-            source: from,
-            target: to,
-            format: "text"
-          })
-        }
+      console.log(
+        "CACHE HIT:",
+        cacheKey
       );
 
-    const data =
-      await response.json();
+      return translationCache[
+        cacheKey
+      ];
+    }
 
-    return data.translatedText;
+    console.log(
+      `API: ${from} → ${to}`
+    );
+
+    const controller =
+      new AbortController();
+
+    const timeout =
+      setTimeout(
+        () =>
+          controller.abort(),
+        5000
+      );
+
+    try {
+
+      const url =
+        `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${from}&tl=${to}&dt=t&q=${encodeURIComponent(input)}`;
+
+      const response =
+        await fetch(
+          url,
+          {
+            signal:
+              controller.signal
+          }
+        );
+
+      clearTimeout(timeout);
+
+      const data =
+        await response.json();
+
+      const translatedText =
+        data[0]
+          .map(
+            item => item[0]
+          )
+          .join("");
+
+      // SAVE TO MEMORY
+
+      translationCache[
+        cacheKey
+      ] = translatedText;
+
+      return translatedText;
+
+    } catch (error) {
+
+      console.error(
+        "Translation failed:",
+        error
+      );
+
+      return input;
+    }
   }
 
   try {
@@ -142,10 +189,13 @@ export default async function handler(
 
       history.push({
         cycle: i + 2,
+
         fakeFrom:
           currentLanguage,
+
         to:
           targetLanguage,
+
         text:
           currentText
       });
