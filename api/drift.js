@@ -1,3 +1,6 @@
+import { driftText }
+from "../src/core/drift.js";
+
 const translationCache = {};
 
 export default async function handler(
