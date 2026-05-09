@@ -260,36 +260,83 @@ export default async function handler(
       });
     }
 
-    // FINAL RECONSTRUCTION
+   // FINAL RECONSTRUCTION
+
+currentText =
+  await doTranslate(
+    currentText,
+    randomItem(
+      languages
+    ),
+    "en"
+  );
+
+history.push({
+  cycle:
+    cycles + 2,
+  fakeFrom:
+    "???",
+  to:
+    "en",
+  text:
+    currentText
+});
+
+// ENGLISHISH STABILIZATION LAYER
+
+for (
+  let i = 0;
+  i < 3;
+  i++
+) {
+
+  try {
+
+    const detectResponse =
+      await fetch(
+        `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(currentText)}`
+      );
+
+    const detectData =
+      await detectResponse.json();
 
     currentText =
-      await doTranslate(
-        currentText,
-        randomItem(
-          languages
-        ),
-        "en"
-      );
+      detectData[0]
+        .map(
+          item => item[0]
+        )
+        .join("");
 
     history.push({
       cycle:
-        cycles + 2,
+        cycles + 3 + i,
+
       fakeFrom:
-        "???",
+        "auto",
+
       to:
-        "en",
+        "en-ish",
+
       text:
         currentText
     });
 
-    res.status(200).json(
-      history
-    );
-
   } catch (error) {
 
-    console.error(error);
+    console.error(
+      "Englishish stabilization failed:",
+      error
+    );
+  }
+}
 
+    res.status(200).json({
+      finalText: currentText,
+      history
+    });   
+  } catch (error) {
+
+    console.error(error); 
     res.status(500).json({
       error:
         "Drift reactor collapse ☠️"
