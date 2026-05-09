@@ -1,6 +1,3 @@
-import { driftText }
-from "../src/core/drift.js";
-
 const translationCache = {};
 
 export default async function handler(
@@ -8,187 +5,210 @@ export default async function handler(
   res
 ) {
 
-  const {
-    text,
-    cycles
-  } = req.body;
+  try {
 
-  const languages = [
+    const {
+      text,
+      cycles
+    } = req.body;
 
-  "fr", // French
-  "de", // German
-  "es", // Spanish
-  "ja", // Japanese
-  "ko", // Korean
-  "ru", // Russian
-  "ar", // Arabic
-  "fi", // Finnish
-  "tr", // Turkish
-  "it", // Italian
-  "pl", // Polish
-  "nl", // Dutch
-  "zh-CN", // Chinese Simplified
-  "zh-TW", // Chinese Traditional
-  "hi", // Hindi
-  "bn", // Bengali
-  "ta", // Tamil
-  "te", // Telugu
-  "el", // Greek
-  "he", // Hebrew
-  "th", // Thai
-  "vi", // Vietnamese
-  "id", // Indonesian
-  "ms", // Malay
-  "uk", // Ukrainian
-  "ro", // Romanian
-  "hu", // Hungarian
-  "cs", // Czech
-  "da", // Danish
-  "no", // Norwegian
-  "sv", // Swedish
-  "sk", // Slovak
-  "sr", // Serbian
-  "hr", // Croatian
-  "bg", // Bulgarian
-  "lt", // Lithuanian
-  "lv", // Latvian
-  "et", // Estonian
-  "sl", // Slovenian
-  "sw", // Swahili
-  "fa", // Persian
-  "ur", // Urdu
-  "ca", // Catalan
-  "eu", // Basque
-  "gl", // Galician
-  "is", // Icelandic
-  "mt", // Maltese
-  "sq", // Albanian
-  "mk", // Macedonian
+    // SAFETY LIMIT
 
- ];
+    const safeCycles =
+      Math.min(
+        Number(cycles),
+        50
+      );
 
-  const history = [];
+    const languages = [
 
-  let currentText = text;
+      "fr",
+      "de",
+      "es",
+      "ja",
+      "ko",
+      "ru",
+      "ar",
+      "fi",
+      "tr",
+      "it",
+      "pl",
+      "nl",
+      "zh-CN",
+      "zh-TW",
+      "hi",
+      "bn",
+      "ta",
+      "te",
+      "el",
+      "he",
+      "th",
+      "vi",
+      "id",
+      "ms",
+      "uk",
+      "ro",
+      "hu",
+      "cs",
+      "da",
+      "no",
+      "sv",
+      "sk",
+      "sr",
+      "hr",
+      "bg",
+      "lt",
+      "lv",
+      "et",
+      "sl",
+      "sw",
+      "fa",
+      "ur",
+      "ca",
+      "eu",
+      "gl",
+      "is",
+      "mt",
+      "sq",
+      "mk"
 
-  function randomItem(arr) {
-
-    return arr[
-      Math.floor(
-        Math.random() *
-        arr.length
-      )
     ];
-  }
 
-  // VERY LIGHT NATURAL MUTATION
+    const history = [];
 
-  function mutateText(input) {
+    let currentText = text;
 
-    let text = input;
+    function randomItem(arr) {
 
-    // ~1% typo chance
-
-    if (Math.random() < 0.01) {
-
-      text =
-        text.replace(
-          /a/g,
-          "ah"
-        );
-    }
-
-    // tiny punctuation instability
-
-    if (Math.random() < 0.03) {
-
-      text += ".";
-    }
-
-    return text;
-  }
-
-  async function doTranslate(
-    input,
-    fakeFrom,
-    to
-  ) {
-
-    const mutated =
-      mutateText(input);
-
-    const cacheKey =
-      `${mutated}_${fakeFrom}_${to}`;
-
-    // CACHE MEMORY
-
-    if (
-      translationCache[cacheKey]
-    ) {
-
-      return translationCache[
-        cacheKey
+      return arr[
+        Math.floor(
+          Math.random() *
+          arr.length
+        )
       ];
     }
 
-    console.log(
-      `FAKE ${fakeFrom} → ${to}`
-    );
+    // LIGHT NATURAL MUTATION
 
-    const controller =
-      new AbortController();
+    function mutateText(input) {
 
-    const timeout =
-      setTimeout(
-        () =>
-          controller.abort(),
-        5000
+      let text = input;
+
+      // VERY RARE typo drift
+
+      if (
+        Math.random() < 0.01
+      ) {
+
+        text =
+          text.replace(
+            /a/g,
+            "ah"
+          );
+      }
+
+      // Tiny punctuation instability
+
+      if (
+        Math.random() < 0.03
+      ) {
+
+        text += ".";
+      }
+
+      return text;
+    }
+
+    async function doTranslate(
+      input,
+      fakeFrom,
+      to
+    ) {
+
+      const mutated =
+        mutateText(input);
+
+      const cacheKey =
+        `${mutated}_${fakeFrom}_${to}`;
+
+      // CACHE HIT
+
+      if (
+        translationCache[
+          cacheKey
+        ]
+      ) {
+
+        return translationCache[
+          cacheKey
+        ];
+      }
+
+      console.log(
+        `FAKE ${fakeFrom} → ${to}`
       );
 
-    try {
+      const controller =
+        new AbortController();
 
-      const url =
-        `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${fakeFrom}&tl=${to}&dt=t&q=${encodeURIComponent(mutated)}`;
-
-      const response =
-        await fetch(
-          url,
-          {
-            signal:
-              controller.signal
-          }
+      const timeout =
+        setTimeout(
+          () =>
+            controller.abort(),
+          4000
         );
 
-      clearTimeout(timeout);
+      try {
 
-      const data =
-        await response.json();
+        const url =
+          `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${fakeFrom}&tl=${to}&dt=t&q=${encodeURIComponent(mutated)}`;
 
-      const translated =
-        data[0]
-          .map(
-            item => item[0]
-          )
-          .join("");
+        const response =
+          await fetch(
+            url,
+            {
+              signal:
+                controller.signal
+            }
+          );
 
-      translationCache[
-        cacheKey
-      ] = translated;
+        clearTimeout(timeout);
 
-      return translated;
+        const data =
+          await response.json();
 
-    } catch (error) {
+        if (
+          !data[0]
+        ) {
 
-      console.error(error);
+          return mutated;
+        }
 
-      return mutated;
+        const translated =
+          data[0]
+            .map(
+              item => item[0]
+            )
+            .join("");
+
+        translationCache[
+          cacheKey
+        ] = translated;
+
+        return translated;
+
+      } catch (error) {
+
+        console.error(
+          "Translation failed:",
+          error
+        );
+
+        return mutated;
+      }
     }
-  }
-
-  try {
 
     // FIRST STEP
-    // en → random
 
     let currentLanguage =
       randomItem(
@@ -203,10 +223,14 @@ export default async function handler(
       );
 
     history.push({
+
       cycle: 1,
+
       fakeFrom: "en",
+
       to:
         currentLanguage,
+
       text:
         currentText
     });
@@ -215,7 +239,7 @@ export default async function handler(
 
     for (
       let i = 0;
-      i < cycles;
+      i < safeCycles;
       i++
     ) {
 
@@ -247,7 +271,9 @@ export default async function handler(
         );
 
       history.push({
-        cycle: i + 2,
+
+        cycle:
+          i + 2,
 
         fakeFrom:
           fakeSource,
@@ -260,84 +286,120 @@ export default async function handler(
       });
     }
 
-   // FINAL RECONSTRUCTION
-
-currentText =
-  await doTranslate(
-    currentText,
-    randomItem(
-      languages
-    ),
-    "en"
-  );
-
-history.push({
-  cycle:
-    cycles + 2,
-  fakeFrom:
-    "???",
-  to:
-    "en",
-  text:
-    currentText
-});
-
-// ENGLISHISH STABILIZATION LAYER
-
-for (
-  let i = 0;
-  i < 3;
-  i++
-) {
-
-  try {
-
-    const detectResponse =
-      await fetch(
-        `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(currentText)}`
-      );
-
-    const detectData =
-      await detectResponse.json();
+    // FINAL ENGLISH RECONSTRUCTION
 
     currentText =
-      detectData[0]
-        .map(
-          item => item[0]
-        )
-        .join("");
+      await doTranslate(
+        currentText,
+        randomItem(
+          languages
+        ),
+        "en"
+      );
 
     history.push({
+
       cycle:
-        cycles + 3 + i,
+        safeCycles + 2,
 
       fakeFrom:
-        "auto",
+        "???",
 
       to:
-        "en-ish",
+        "en",
 
       text:
         currentText
     });
 
-  } catch (error) {
+    // ENGLISHISH STABILIZATION
 
-    console.error(
-      "Englishish stabilization failed:",
-      error
-    );
-  }
-}
+    for (
+      let i = 0;
+      i < 3;
+      i++
+    ) {
+
+      try {
+
+        const controller =
+          new AbortController();
+
+        const timeout =
+          setTimeout(
+            () =>
+              controller.abort(),
+            4000
+          );
+
+        const response =
+          await fetch(
+            `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(currentText)}`,
+            {
+              signal:
+                controller.signal
+            }
+          );
+
+        clearTimeout(timeout);
+
+        const data =
+          await response.json();
+
+        if (
+          !data[0]
+        ) {
+
+          break;
+        }
+
+        currentText =
+          data[0]
+            .map(
+              item => item[0]
+            )
+            .join("");
+
+        history.push({
+
+          cycle:
+            safeCycles + 3 + i,
+
+          fakeFrom:
+            "auto",
+
+          to:
+            "en-ish",
+
+          text:
+            currentText
+        });
+
+      } catch (error) {
+
+        console.error(
+          "Stabilization failed:",
+          error
+        );
+
+        break;
+      }
+    }
 
     res.status(200).json({
-      finalText: currentText,
+
+      finalText:
+        currentText,
+
       history
-    });   
+    });
+
   } catch (error) {
 
-    console.error(error); 
+    console.error(error);
+
     res.status(500).json({
+
       error:
         "Drift reactor collapse ☠️"
     });
