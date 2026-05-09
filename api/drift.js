@@ -29,12 +29,9 @@ export default async function handler(
   ];
 
   const weirdFragments = [
-    "!!!",
-    "...",
-    "???",
-    "..!",
-    "!?!",
-    "??!",
+    "like",
+    "shitty",
+    "void",
   ];
 
   const history = [];
