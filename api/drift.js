@@ -20,7 +20,10 @@ export default async function handler(
     "ru",
     "ar",
     "fi",
-    "tr"
+    "tr",
+    "it",
+    "pl",
+    "nl"
   ];
 
   const history = [];
@@ -39,86 +42,153 @@ export default async function handler(
     ];
   }
 
-  // FIRST STEP:
-  // en → random
-
-  let nextLanguage =
-    randomLanguage();
-
-  currentText =
-    await translate(
-      currentText,
-      currentLanguage,
-      nextLanguage
-    );
-
-  history.push({
-    cycle: 1,
-    fakeFrom:
-      currentLanguage,
-    to:
-      nextLanguage,
-    text:
-      currentText
-  });
-
-  currentLanguage =
-    nextLanguage;
-
-  // MIDDLE CHAOS CYCLES
-
-  for (
-    let i = 0;
-    i < cycles;
-    i++
+  async function doTranslate(
+    input,
+    from,
+    to
   ) {
 
-    let targetLanguage =
+    console.log(
+      `${from} → ${to}`
+    );
+
+    const response =
+      await fetch(
+        "https://translate.argosopentech.com/translate",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body: JSON.stringify({
+            q: input,
+            source: from,
+            target: to,
+            format: "text"
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    return data.translatedText;
+  }
+
+  try {
+
+    // FIRST STEP
+    // en → random
+
+    let nextLanguage =
       randomLanguage();
 
+    while (
+      nextLanguage === currentLanguage
+    ) {
+
+      nextLanguage =
+        randomLanguage();
+    }
+
     currentText =
-      await translate(
+      await doTranslate(
         currentText,
         currentLanguage,
-        targetLanguage
+        nextLanguage
       );
 
     history.push({
-      cycle: i + 2,
+      cycle: 1,
       fakeFrom:
         currentLanguage,
       to:
-        targetLanguage,
+        nextLanguage,
       text:
         currentText
     });
 
     currentLanguage =
-      targetLanguage;
-  }
+      nextLanguage;
 
-  // FINAL STEP:
-  // random → en
+    // RANDOM CHAOS CYCLES
 
-  currentText =
-    await translate(
-      currentText,
-      currentLanguage,
-      "en"
+    for (
+      let i = 0;
+      i < cycles;
+      i++
+    ) {
+
+      let targetLanguage =
+        randomLanguage();
+
+      while (
+        targetLanguage === currentLanguage
+      ) {
+
+        targetLanguage =
+          randomLanguage();
+      }
+
+      currentText =
+        await doTranslate(
+          currentText,
+          currentLanguage,
+          targetLanguage
+        );
+
+      history.push({
+        cycle: i + 2,
+        fakeFrom:
+          currentLanguage,
+        to:
+          targetLanguage,
+        text:
+          currentText
+      });
+
+      currentLanguage =
+        targetLanguage;
+    }
+
+    // FINAL STEP
+    // random → en
+
+    currentText =
+      await doTranslate(
+        currentText,
+        currentLanguage,
+        "en"
+      );
+
+    history.push({
+      cycle:
+        cycles + 2,
+
+      fakeFrom:
+        currentLanguage,
+
+      to:
+        "en",
+
+      text:
+        currentText
+    });
+
+    res.status(200).json(
+      history
     );
 
-  history.push({
-    cycle:
-      cycles + 2,
-    fakeFrom:
-      currentLanguage,
-    to:
-      "en",
-    text:
-      currentText
-  });
+  } catch (error) {
 
-  res.status(200).json(
-    history
-  );
+    console.error(error);
+
+    res.status(500).json({
+      error:
+        "Semantic reactor meltdown ☠️"
+    });
+  }
 }
