@@ -12,37 +12,78 @@ body {
   background:
     radial-gradient(
       circle at top,
-      #111133,
-      #050510 60%
+      #102040 0%,
+      #050510 45%,
+      #010103 100%
     );
+
+  background-attachment: fixed;
 
   color: white;
 
   font-family:
-    Arial,
+    "Segoe UI",
     sans-serif;
 
   min-height: 100vh;
 
   overflow-x: hidden;
+
+  position: relative;
 }
+
+/* semantic ghost layer */
+
+body::before {
+
+  content:
+    "JÄTKAJON ...?!  Helusineshiya  Ódýrt  Faskenor  查看更多  rabbit apology reactor";
+
+  position: fixed;
+
+  inset: 0;
+
+  font-size: 1rem;
+
+  line-height: 2.8;
+
+  letter-spacing: 2px;
+
+  color: rgba(255,255,255,0.03);
+
+  white-space: pre-wrap;
+
+  padding: 40px;
+
+  pointer-events: none;
+
+  user-select: none;
+
+  z-index: -2;
+}
+
+/* atmosphere glow */
 
 .backgroundGlow {
 
   position: fixed;
 
-  width: 700px;
+  width: 900px;
 
-  height: 700px;
+  height: 900px;
 
   background:
-    cyan;
+    radial-gradient(
+      circle,
+      rgba(0,255,255,0.18),
+      transparent 70%
+    );
 
-  filter: blur(180px);
+  filter: blur(140px);
 
-  opacity: 0.12;
+  opacity: 0.35;
 
-  top: -200px;
+  top: -300px;
 
   left: 50%;
 
@@ -50,183 +91,417 @@ body {
     translateX(-50%);
 
   pointer-events: none;
+
+  z-index: -1;
 }
 
 .container {
 
-  max-width: 900px;
+  max-width: 950px;
 
   margin: auto;
 
-  padding: 60px 20px;
+  padding: 70px 20px;
 }
 
 h1 {
 
-  font-size: 4rem;
-
   text-align: center;
 
-  color: cyan;
+  font-size: 4.5rem;
 
-  letter-spacing: 6px;
+  font-weight: 600;
+
+  letter-spacing: 12px;
+
+  color: #8ffff0;
 
   text-shadow:
-    0 0 30px cyan;
+    0 0 18px rgba(120,255,240,0.4);
+
+  margin-bottom: 10px;
 }
 
 .subtitle {
 
   text-align: center;
 
-  color: #aaaaee;
+  color: rgba(220,240,255,0.7);
 
-  margin-top: 10px;
+  font-size: 1rem;
 
-  margin-bottom: 40px;
+  letter-spacing: 4px;
 
-  font-size: 1.1rem;
+  margin-bottom: 45px;
 
-  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 .panel {
 
+  position: relative;
+
   background:
-    rgba(255,255,255,0.05);
+    rgba(8,12,22,0.75);
 
   border:
-    1px solid rgba(255,255,255,0.1);
+    1px solid rgba(255,255,255,0.06);
+
+  border-radius: 28px;
+
+  padding: 28px;
 
   backdrop-filter:
-    blur(12px);
+    blur(18px);
 
-  padding: 25px;
-
-  border-radius: 24px;
+  overflow: hidden;
 
   box-shadow:
-    0 0 40px rgba(0,255,255,0.08);
+    0 0 60px rgba(0,255,255,0.05);
+}
+
+/* reactor scanlines */
+
+.panel::before {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.015),
+      rgba(255,255,255,0.015) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+
+  pointer-events: none;
 }
 
 input {
 
   width: 100%;
 
-  padding: 16px;
+  padding: 18px;
 
-  margin-bottom: 15px;
+  margin-bottom: 16px;
 
   background:
-    rgba(0,0,0,0.4);
+    rgba(0,0,0,0.35);
 
   border:
-    1px solid rgba(255,255,255,0.08);
+    1px solid rgba(255,255,255,0.05);
 
-  border-radius: 14px;
+  border-radius: 16px;
 
-  color: white;
+  color: #dfffff;
 
   font-size: 1rem;
+
+  backdrop-filter:
+    blur(10px);
+
+  transition: 0.25s;
+}
+
+input::placeholder {
+
+  color: rgba(220,240,255,0.35);
 }
 
 input:focus {
 
   outline: none;
 
-  border-color: cyan;
+  border-color:
+    rgba(120,255,240,0.4);
 
   box-shadow:
-    0 0 20px rgba(0,255,255,0.3);
+    0 0 25px rgba(120,255,240,0.12);
 }
 
 button {
 
   width: 100%;
 
-  padding: 16px;
+  padding: 18px;
 
   border: none;
 
-  border-radius: 14px;
+  border-radius: 16px;
 
   background:
-    linear-gradient(
-      90deg,
-      cyan,
-      #7a5cff
-    );
+    rgba(120,255,220,0.12);
 
-  color: black;
+  border:
+    1px solid rgba(120,255,220,0.28);
+
+  color: #bffff0;
 
   font-weight: bold;
 
-  letter-spacing: 2px;
+  letter-spacing: 5px;
+
+  font-size: 0.95rem;
 
   cursor: pointer;
 
-  transition: 0.3s;
-}
-
-button:hover {
-
-  transform:
-    scale(1.02);
-
-  box-shadow:
-    0 0 25px cyan;
-}
-
-#output {
-
-  margin-top: 40px;
-}
-
-.driftCard {
-
-  background:
-    rgba(255,255,255,0.04);
-
-  border:
-    1px solid rgba(255,255,255,0.08);
-
-  border-radius: 20px;
-
-  padding: 20px;
-
-  margin-bottom: 20px;
+  transition: 0.25s;
 
   backdrop-filter:
     blur(10px);
 
+  text-transform: uppercase;
+}
+
+button:hover {
+
+  background:
+    rgba(120,255,220,0.2);
+
+  box-shadow:
+    0 0 35px rgba(120,255,220,0.14);
+
+  transform:
+    translateY(-2px);
+}
+
+button:active {
+
+  transform:
+    scale(0.99);
+}
+
+#output {
+
+  margin-top: 45px;
+}
+
+.driftCard {
+
+  position: relative;
+
+  background:
+    rgba(255,255,255,0.03);
+
+  border:
+    1px solid rgba(255,255,255,0.05);
+
+  border-radius: 22px;
+
+  padding: 22px;
+
+  margin-bottom: 20px;
+
+  backdrop-filter:
+    blur(14px);
+
+  overflow: hidden;
+
   animation:
-    fadeIn 0.5s ease;
+    fadeUp 0.5s ease;
+}
+
+.driftCard::before {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(255,255,255,0.02),
+      transparent
+    );
+
+  pointer-events: none;
 }
 
 .lang {
 
-  color: cyan;
+  color: #7ffff0;
 
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
 }
 
 .text {
 
-  font-size: 1.3rem;
+  font-size: 1.25rem;
+
+  line-height: 1.7;
+
+  word-break: break-word;
+
+  color: rgba(255,255,255,0.92);
+}
+
+.hidden {
+
+  display: none;
+}
+
+#resultArea {
+
+  margin-top: 45px;
+}
+
+.finalCard {
+
+  background:
+    rgba(10,16,28,0.82);
+
+  border:
+    1px solid rgba(255,255,255,0.06);
+
+  border-radius: 30px;
+
+  padding: 40px;
+
+  backdrop-filter:
+    blur(22px);
+
+  box-shadow:
+    0 0 60px rgba(0,255,255,0.06);
+
+  animation:
+    fadeUp 0.8s ease;
+}
+
+.originalText,
+.finalText {
+
+  font-size: 2rem;
+
+  text-align: center;
+
+  line-height: 1.7;
 
   word-break: break-word;
 }
 
-@keyframes fadeIn {
+.originalText {
+
+  color:
+    rgba(255,255,255,0.7);
+}
+
+.finalText {
+
+  color: #8ffff0;
+
+  text-shadow:
+    0 0 15px rgba(120,255,240,0.25);
+}
+
+.arrow {
+
+  text-align: center;
+
+  font-size: 2rem;
+
+  margin: 25px 0;
+
+  color: rgba(120,255,240,0.7);
+
+  animation:
+    pulse 2s infinite;
+}
+
+.historyToggle {
+
+  margin-top: 28px;
+
+  text-align: center;
+
+  color: rgba(160,220,255,0.7);
+
+  cursor: pointer;
+
+  transition: 0.25s;
+
+  font-size: 0.95rem;
+
+  letter-spacing: 1px;
+}
+
+.historyToggle:hover {
+
+  color: #8ffff0;
+
+  text-shadow:
+    0 0 10px rgba(120,255,240,0.25);
+}
+
+.historyPanel {
+
+  margin-top: 30px;
+
+  animation:
+    fadeUp 0.5s ease;
+}
+
+.historyCard {
+
+  background:
+    rgba(255,255,255,0.025);
+
+  border:
+    1px solid rgba(255,255,255,0.04);
+
+  border-radius: 18px;
+
+  padding: 18px;
+
+  margin-bottom: 15px;
+
+  backdrop-filter:
+    blur(12px);
+}
+
+.historyLang {
+
+  color: #7ffff0;
+
+  margin-bottom: 10px;
+
+  font-size: 0.8rem;
+
+  letter-spacing: 1px;
+
+  text-transform: uppercase;
+}
+
+.historyText {
+
+  font-size: 1.05rem;
+
+  line-height: 1.6;
+
+  color: rgba(255,255,255,0.88);
+}
+
+@keyframes fadeUp {
 
   from {
 
     opacity: 0;
 
     transform:
-      translateY(20px);
+      translateY(24px);
   }
 
   to {
@@ -238,103 +513,20 @@ button:hover {
   }
 }
 
-.hidden {
-  display: none;
-}
-
-#resultArea {
-  margin-top: 40px;
-}
-
-.finalCard {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 28px;
-  padding: 40px;
-  backdrop-filter: blur(18px);
-  box-shadow: 0 0 40px rgba(0,255,255,0.1);
-  animation: fadeUp 0.8s ease;
-}
-
-.originalText,
-.finalText {
-  font-size: 2rem;
-  text-align: center;
-  word-break: break-word;
-}
-
-.arrow {
-  text-align: center;
-  font-size: 2rem;
-  margin: 25px 0;
-  color: cyan;
-  animation: pulse 2s infinite;
-}
-
-.finalText {
-  color: cyan;
-  text-shadow: 0 0 20px cyan;
-}
-
-.historyToggle {
-  margin-top: 25px;
-  text-align: center;
-  color: #88ccff;
-  cursor: pointer;
-  transition: 0.3s;
-  font-size: 0.95rem;
-}
-
-.historyToggle:hover {
-  color: cyan;
-  text-shadow: 0 0 10px cyan;
-}
-
-.historyPanel {
-  margin-top: 30px;
-  animation: fadeUp 0.5s ease;
-}
-
-.historyCard {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 18px;
-  padding: 18px;
-  margin-bottom: 15px;
-}
-
-.historyLang {
-  color: cyan;
-  margin-bottom: 10px;
-  font-size: 0.85rem;
-}
-
-.historyText {
-  font-size: 1.1rem;
-}
-
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(25px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @keyframes pulse {
+
   0% {
-    opacity: 0.5;
+
+    opacity: 0.4;
   }
 
   50% {
+
     opacity: 1;
   }
 
   100% {
-    opacity: 0.5;
+
+    opacity: 0.4;
   }
 }
