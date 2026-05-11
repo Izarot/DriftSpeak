@@ -177,6 +177,10 @@ export default async function handler(
         const data =
           await response.json();
 
+          console.log(
+           JSON.stringify(data)
+          );
+
         if (
           !data[0]
         ) {
